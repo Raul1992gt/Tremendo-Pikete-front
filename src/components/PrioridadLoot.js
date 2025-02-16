@@ -19,7 +19,7 @@ const LootPrioridadTable = () => {
   debugger
     useEffect(() => {
       axios
-        .get(process.env.REACT_APP_API_URL+"/jugadores/prioLooteo")
+        .get(process.env.REACT_APP_API_URL+"/api/jugadores/prioLooteo")
         .then((response) => {
           console.log(response.data);
           setJugadores(response.data);
