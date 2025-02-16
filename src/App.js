@@ -39,7 +39,11 @@ const App = () => {
           <Button color="inherit" component={Link} to="/">Home</Button>
           <Button color="inherit" component={Link} to="/roster">Roster</Button>
           <Button color="inherit" component={Link} to="/jugadores-items">Jugadores y Items</Button>
-          <Button color="inherit" component={Link} to="/prioridad-loot">Prioridad Loot</Button>
+          {(rol === 'admin' || rol === 'oficial') && (
+            <Button color="inherit" component={Link} to="/prioridad-loot">
+              Prioridad Loot
+            </Button>
+          )}
           {rol === 'admin' && (
             <Button color="inherit" component={Link} to="/cargar-datos">
               Cargar Datos
