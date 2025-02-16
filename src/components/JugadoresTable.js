@@ -22,7 +22,7 @@ const JugadoresTable = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:3000/api/jugadores")
+            .get(process.env.REACT_APP_API_URL+"/jugadores")
             .then((response) => {
                 console.log(response.data);
                 setJugadores(response.data);
