@@ -12,7 +12,7 @@ const JugadoresItemsCountTable = () => {
     const [jugadorData, setJugadorData] = useState(null);
 
     useEffect(() => {
-        axios.get(process.env.REACT_APP_API_URL +'/jugadores/itemsTotales') 
+        axios.get(process.env.REACT_APP_API_URL +'/api/jugadores/itemsTotales') 
             .then(response => {
                 setJugadoresItemsCount(response.data);
             })
@@ -22,7 +22,7 @@ const JugadoresItemsCountTable = () => {
     }, []);
 
     const openPopup = (playerId, nombre) => {
-        axios.get(process.env.REACT_APP_API_URL+`/jugadores/items/${playerId}`)
+        axios.get(process.env.REACT_APP_API_URL+`/api/jugadores/items/${playerId}`)
             .then(response => {
                 if (response.data.length > 0) {
                     const jugadorData = {

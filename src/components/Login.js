@@ -12,7 +12,7 @@ const handleLogin = async (e) => {
   e.preventDefault();
 
   try {
-    const response = await axios.post(process.env.REACT_APP_API_URL+'/login', {
+    const response = await axios.post(process.env.REACT_APP_API_URL+'/api/login', {
       nombre_usuario: nombreUsuario,
       contrasena: contrasena,
     });
