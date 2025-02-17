@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Typography, Button, Box, TextField } from '@mui/material';
+import { Typography, Button, Box, TextField, Snackbar } from '@mui/material';
 import axios from 'axios';
 
 const CargarDatos = () => {
   const [file, setFile] = useState(null);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
@@ -19,19 +21,22 @@ const CargarDatos = () => {
       alert('Por favor, selecciona un archivo JSON para cargar');
       return;
     }
-    debugger
+
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-      const response = await axios.post(process.env.REACT_APP_API_URL+'/api/cargarRaid', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(process.env.REACT_APP_API_URL+'/api/cargarRaid', formData);
+      setSnackbarMessage('Archivo cargado exitosamente');
+      setOpenSnackbar(true);
     } catch (error) {
-        alert('Hubo un error al cargar el archivo');
-      }
+      setSnackbarMessage('Hubo un error al cargar el archivo');
+      setOpenSnackbar(true);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -50,6 +55,14 @@ const CargarDatos = () => {
       <Button variant="contained" color="primary" onClick={handleUpload}>
         Cargar Archivo
       </Button>
+
+      {/* Snackbar para el mensaje de carga */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+      />
     </Box>
   );
 };
