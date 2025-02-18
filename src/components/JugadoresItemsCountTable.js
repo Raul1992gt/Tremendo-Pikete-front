@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Typography, Container, Table, TableHead, TableBody, TableRow, TableCell, TableContainer, Paper, Link } from '@mui/material';
-import { red, orange, green, yellow } from '@mui/material/colors'; // Importar colores de MUI
-import ItemPopup from './ItemPopUp'; // Importar el ItemPopup
+import { Typography, Container, Table, TableHead, TableBody, TableRow, TableCell, TableContainer, Paper, Link, TableSortLabel, TextField } from '@mui/material';
+import { red, orange, green, yellow } from '@mui/material/colors';
+import ItemPopup from './ItemPopUp';
 
 const JugadoresItemsCountTable = () => {
     const [jugadoresItemsCount, setJugadoresItemsCount] = useState([]);
@@ -10,11 +10,16 @@ const JugadoresItemsCountTable = () => {
     const [nombre, setNombre] = useState('');
     const [open, setOpen] = useState(false);
     const [jugadorData, setJugadorData] = useState(null);
+    const [sortConfig, setSortConfig] = useState({ key: 'items_count', direction: 'desc' });
+    
+    // Estado para búsqueda
+    const [filtroBusqueda, setFiltroBusqueda] = useState('');
 
     useEffect(() => {
-        axios.get(process.env.REACT_APP_API_URL +'/api/jugadores/itemsTotales') 
+        axios.get(process.env.REACT_APP_API_URL + '/api/jugadores/itemsTotales')
             .then(response => {
-                setJugadoresItemsCount(response.data);
+                const sortedData = [...response.data].sort((a, b) => b.items_count - a.items_count);
+                setJugadoresItemsCount(sortedData);
             })
             .catch(error => {
                 console.error('Error al obtener jugadores y cantidad de items:', error);
@@ -22,13 +27,13 @@ const JugadoresItemsCountTable = () => {
     }, []);
 
     const openPopup = (playerId, nombre) => {
-        axios.get(process.env.REACT_APP_API_URL+`/api/jugadores/items/${playerId}`)
+        axios.get(process.env.REACT_APP_API_URL + `/api/jugadores/items/${playerId}`)
             .then(response => {
                 if (response.data.length > 0) {
                     const jugadorData = {
-                        jugadorNombre: response.data[0].jugadornombre, 
-                        jugadorClase: response.data[0].jugadorclase, 
-                        jugadorRol: response.data[0].jugadorrol 
+                        jugadorNombre: response.data[0].jugadornombre,
+                        jugadorClase: response.data[0].jugadorclase,
+                        jugadorRol: response.data[0].jugadorrol
                     };
 
                     const items = response.data.map(({ nombreitem, tipoitem, subtipoitem }) => ({
@@ -57,15 +62,55 @@ const JugadoresItemsCountTable = () => {
     const getColor = (itemCount) => {
         const count = parseInt(itemCount, 10);
         if (count === 0) {
-            return red[500]; // Rojo para 0 ítems
+            return red[500];
         } else if (count > 4 && count < 8) {
-            return orange[500]; // Naranja para entre 5 y 7 ítems
+            return orange[500];
         } else if (count >= 8) {
-            return green[500]; // Verde para 8 o más ítems
+            return green[500];
         } else {
-            return yellow[700]; // Amarillo para 1-4 ítems
+            return yellow[700];
         }
-        
+    };
+
+    const handleSort = (key) => {
+        let direction = 'asc';
+    
+        if (sortConfig.key === key) {
+            direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+        }
+    
+        if (key === 'items_count') {
+            direction = sortConfig.key === 'items_count' ? (sortConfig.direction === 'desc' ? 'asc' : 'desc') : 'desc';
+        }
+    
+        const sortedData = [...jugadoresItemsCount].sort((a, b) => {
+            let valueA = a[key];
+            let valueB = b[key];
+    
+            if (key === 'items_count') {
+                valueA = parseInt(valueA, 10);
+                valueB = parseInt(valueB, 10);
+            }
+    
+            if (valueA < valueB) return direction === 'asc' ? -1 : 1;
+            if (valueA > valueB) return direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    
+        setSortConfig({ key, direction });
+        setJugadoresItemsCount(sortedData);
+    };
+
+    // Función para filtrar los jugadores por nombre
+    const applyFilters = (data) => {
+        return data.filter(jugador => {
+            // Filtro por búsqueda rápida (nombre)
+            const matchBusqueda = filtroBusqueda
+                ? jugador.nombre.toLowerCase().includes(filtroBusqueda.toLowerCase())
+                : true;
+            
+            return matchBusqueda;
+        });
     };
 
     return (
@@ -73,58 +118,78 @@ const JugadoresItemsCountTable = () => {
             <Typography variant="h4" gutterBottom>
                 Jugadores y Número de Items Recibidos
             </Typography>
+
+            {/* Filtro de búsqueda rápida */}
+            <TextField
+                label="Buscar por Nombre"
+                variant="outlined"
+                fullWidth
+                value={filtroBusqueda}
+                onChange={(e) => setFiltroBusqueda(e.target.value)}
+                sx={{ marginBottom: 2 }}
+            />
+
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Nombre del Jugador</TableCell>
-                            <TableCell>Clase</TableCell>
-                            <TableCell>Rol</TableCell>
-                            <TableCell>Cantidad de Items</TableCell>
+                            {['nombre', 'clase', 'rol', 'items_count'].map((col) => (
+                                <TableCell key={col}>
+                                    <TableSortLabel
+                                        active={sortConfig.key === col}
+                                        direction={sortConfig.key === col ? sortConfig.direction : 'asc'}
+                                        onClick={() => handleSort(col)}
+                                    >
+                                        {col === 'nombre' ? 'Nombre del Jugador' :
+                                            col === 'clase' ? 'Clase' :
+                                                col === 'rol' ? 'Rol' :
+                                                    'Cantidad de Items'}
+                                    </TableSortLabel>
+                                </TableCell>
+                            ))}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                    {jugadoresItemsCount.map((jugador, index) => (
-                        <TableRow
-                            key={jugador.player_id}
-                            sx={{
-                                backgroundColor: index % 2 === 0 ? '#f5f5f5' : 'white' // Alterna entre gris y blanco
-                            }}
-                        >
-                            <TableCell>{jugador.nombre}</TableCell>
-                            <TableCell>{jugador.clase}</TableCell>
-                            <TableCell>{jugador.rol}</TableCell>
-                            <TableCell
+                        {applyFilters(jugadoresItemsCount).map((jugador, index) => (
+                            <TableRow
+                                key={jugador.player_id}
                                 sx={{
-                                    backgroundColor: getColor(jugador.items_count),
-                                    color: 'white',
-                                    fontWeight: 'bold',
-                                    textAlign: 'center',
-                                    borderRadius: '4px'
+                                    backgroundColor: index % 2 === 0 ? '#f5f5f5' : 'white'
                                 }}
                             >
-                                <Link 
-                                    href="#" 
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        openPopup(jugador.player_id, jugador.nombre);
-                                    }}
-                                    style={{
-                                        textDecoration: 'none',
+                                <TableCell>{jugador.nombre}</TableCell>
+                                <TableCell>{jugador.clase}</TableCell>
+                                <TableCell>{jugador.rol}</TableCell>
+                                <TableCell
+                                    sx={{
+                                        backgroundColor: getColor(jugador.items_count),
                                         color: 'white',
-                                        display: 'block',
-                                        width: '100%',
-                                        height: '100%',
-                                        padding: '8px'
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                        borderRadius: '4px'
                                     }}
                                 >
-                                    {jugador.items_count}
-                                </Link>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-
+                                    <Link
+                                        href="#"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            openPopup(jugador.player_id, jugador.nombre);
+                                        }}
+                                        style={{
+                                            textDecoration: 'none',
+                                            color: 'white',
+                                            display: 'block',
+                                            width: '100%',
+                                            height: '100%',
+                                            padding: '8px'
+                                        }}
+                                    >
+                                        {jugador.items_count}
+                                    </Link>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
                 </Table>
             </TableContainer>
 

@@ -63,7 +63,7 @@ const App = () => {
           <Route path="/" element={<PrivateRoute token={token}><HomePage /></PrivateRoute>} />
           <Route path="/roster" element={<PrivateRoute token={token}><JugadoresTable /></PrivateRoute>} />
           <Route path="/jugadores-items" element={<PrivateRoute token={token}><JugadoresItemsCountTable /></PrivateRoute>} />
-          <Route path="/prioridad-loot" element={<PrivateRoute token={token}><PrioridadLoot /></PrivateRoute>} /> {/* Nueva ruta */}
+          <Route path="/prioridad-loot" element={<PrivateRoute token={token}><PrioridadLoot /></PrivateRoute>} />
           <Route path="/cargar-datos" element={rol === 'admin' ? <CargarDatos /> : <Typography>No tienes permiso para acceder a esta página.</Typography>} />
         </Routes>
       </Container>
