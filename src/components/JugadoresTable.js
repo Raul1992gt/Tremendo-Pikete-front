@@ -7,9 +7,13 @@ import {
 
 const getColorByAsistencia = (puntos) => {
     switch (puntos) {
-        case 0: return "#ff4d4d"; // Rojo
-        case 1: return "#ffa500"; // Naranja
-        case 2: return "#ffd700"; // Amarillo
+        case 0:
+        case 1:
+             return "#ff4d4d"; // Rojo
+        case 2:
+        case 3:
+            return "#ffa500"; // Naranja
+        case 4: return "#ffd700"; // Amarillo
         default: return "#4caf50"; // Verde
     }
 };
