@@ -11,7 +11,11 @@ const ItemPopup = ({ nombre, items, onClose }) => {
                     <Grid 
                         container 
                         spacing={2} 
-                        justifyContent={items.length === 1 ? "center" : "flex-start"} // Centrar si hay un solo ítem
+                        justifyContent={items.length === 1 ? "center" : "flex-start"} 
+                        sx={{
+                            maxHeight: '60vh', 
+                            overflowY: 'auto', // Añadimos scroll vertical
+                        }}
                     >
                         {items.map((item, index) => {
                             // Verificar si el nombre del ítem contiene "Desecrated"
@@ -20,9 +24,9 @@ const ItemPopup = ({ nombre, items, onClose }) => {
                             return (
                                 <Grid 
                                     item 
-                                    xs={items.length === 1 ? "auto" : 12} 
-                                    sm={6} 
-                                    md={4} 
+                                    xs={12}  // En móvil, ocupa todo el ancho
+                                    sm={6}   // En pantallas medianas, 2 columnas
+                                    md={4}   // En pantallas grandes, 3 columnas
                                     key={index}
                                 >
                                     <Card sx={{ minWidth: items.length === 1 ? 200 : 'auto' }}>
