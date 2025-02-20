@@ -8,6 +8,7 @@ import JugadoresItemsCountTable from './components/JugadoresItemsCountTable';
 import PrioridadLoot from './components/PrioridadLoot';
 import PrivateRoute from './components/PrivateRoute'; 
 import CargarDatos from './components/CargarDatos';
+import GenerarInformeButton from './components/GenerarInformeButton';
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('token') || null);
@@ -117,10 +118,8 @@ const App = () => {
           <Route path="/roster" element={<PrivateRoute token={token}><JugadoresTable /></PrivateRoute>} />
           <Route path="/jugadores-items" element={<PrivateRoute token={token}><JugadoresItemsCountTable /></PrivateRoute>} />
           <Route path="/prioridad-loot" element={<PrivateRoute token={token}><PrioridadLoot /></PrivateRoute>} />
-          <Route 
-            path="/cargar-datos" 
-            element={rol === 'admin' ? <CargarDatos /> : <Typography>No tienes permiso para acceder a esta página.</Typography>} 
-          />
+          <Route path="/cargar-datos" element={rol === 'admin' ? <CargarDatos /> : <Typography>No tienes permiso para acceder a esta página.</Typography>} />
+          <Route path="/generar-informe" element={<PrivateRoute token={token}><GenerarInformeButton /></PrivateRoute>} />
         </Routes>
       </Container>
     </div>

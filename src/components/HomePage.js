@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Container, Button, Stack, Box } from '@mui/material';
+import ItemsPorJugadorChart from './ItemsPorJugadorChart';
+import GenerarInformeButton from './GenerarInformeButton';
 
 const HomePage = () => {
     const [nombreUsuario, setNombreUsuario] = useState(localStorage.getItem('nombreUsuario'));
@@ -16,6 +18,9 @@ const HomePage = () => {
       <Typography variant="h3" gutterBottom>
         {nombreUsuario ? `Bienvenido, ${nombreUsuario}!` : 'Bienvenidos a la aplicación de gestión de jugadores'}
       </Typography>
+
+      <ItemsPorJugadorChart />
+      <GenerarInformeButton />
     </Container>
   );
 };
