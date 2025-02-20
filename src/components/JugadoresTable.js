@@ -43,7 +43,7 @@ const JugadoresTable = () => {
             if (key === 'puntos_asistencia') {
                 valueA = Number(valueA);
                 valueB = Number(valueB);
-            } else {
+            } else {debugger
                 valueA = valueA.toString().toLowerCase();
                 valueB = valueB.toString().toLowerCase();
             }
@@ -59,7 +59,8 @@ const JugadoresTable = () => {
 
     // Filtrar los jugadores por nombre
     const filteredJugadores = jugadores.filter((jugador) =>
-        jugador.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+        alert("HOLA")
+        //jugador.nombre.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (

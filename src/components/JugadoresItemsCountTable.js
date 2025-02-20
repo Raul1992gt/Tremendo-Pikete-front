@@ -102,7 +102,7 @@ const JugadoresItemsCountTable = () => {
     };
 
     // Función para filtrar los jugadores por nombre
-    const applyFilters = (data) => {
+    const applyFilters = (data) => {debugger
         return data.filter(jugador => {
             // Filtro por búsqueda rápida (nombre)
             const matchBusqueda = filtroBusqueda

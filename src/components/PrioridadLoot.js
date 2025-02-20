@@ -16,7 +16,7 @@ const getColorByPrioridad = (prioridad) => {
 const LootPrioridadTable = () => {
     const [jugadores, setJugadores] = useState([]);
     const [jugadorSeleccionado, setJugadorSeleccionado] = useState(null);
-  debugger
+  
     useEffect(() => {
       axios
         .get(process.env.REACT_APP_API_URL+"/api/jugadores/prioLooteo")

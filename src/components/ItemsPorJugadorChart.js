@@ -71,11 +71,12 @@ const ItemsPorJugadorChart = () => {
     }
 
     return (
-        <div style={{ width: "600px", margin: "auto" }}>
+        <div style={{ width: "100%", maxWidth: "600px", aspectRatio: "1/1", margin: "auto" }}>
             <Pie 
                 data={chartData}
                 options={{
                     responsive: true,
+                    maintainAspectRatio: false, // Permite que se ajuste al contenedor con aspect-ratio
                     plugins: {
                         title: {
                             display: true,
@@ -93,13 +94,14 @@ const ItemsPorJugadorChart = () => {
                         },
                     },
                     animation: {
-                        animateScale: true,  // Animación de escalado al inicio
-                        animateRotate: true, // Rotación al inicio
+                        animateScale: true,  
+                        animateRotate: true, 
                     },
                 }}
             />
         </div>
     );
+    
 };
 
 export default ItemsPorJugadorChart;

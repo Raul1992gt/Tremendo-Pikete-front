@@ -17,7 +17,7 @@ const ItemPopup = ({ nombre, items, onClose }) => {
                             overflowY: 'auto', // Añadimos scroll vertical
                         }}
                     >
-                        {items.map((item, index) => {
+                        {items.map((item, index) => {debugger
                             // Verificar si el nombre del ítem contiene "Desecrated"
                             const esTier = item.nombreItem && item.nombreItem.toLowerCase().includes('desecrated');
 
